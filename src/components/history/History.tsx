@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import "./style.scss";
+import { formatHistoryItem } from "../../utils/history";
 
-type HistoryItem = {
+export type HistoryItem = {
   id: string;
   url: string;
   title?: string;
@@ -10,20 +11,28 @@ type HistoryItem = {
   visitCount?: number;
 };
 
+const urlBlacklist = [ "https://www.youtube.com/", "https://www.google.com/", "https://www.facebook.com/",
+ "https://mail.google.com/mail/u/0/#inbox", "https://www.linkedin.com/feed/", "https://web.whatsapp.com/"
+];
+
 const History: React.FC = () => {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
     const urlToHistoryItem: { [url: string]: HistoryItem } = {};
     const millisecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
-    const oneWeekAgo = Date.now() - millisecondsPerWeek;
+    // const oneWeekAgo = Date.now() - millisecondsPerWeek;
+    const oneYear = Date.now() - millisecondsPerWeek * 52;
 
     // Fetch history items from the last week
     chrome.history.search(
-      { text: "", startTime: oneWeekAgo, maxResults: 50 },
+      { text: "", startTime: oneYear, maxResults: 1000 },
       (historyItems) => {
         historyItems.forEach((item) => {
           // Store each item with its details
+          if(urlBlacklist.includes(item.url!)) {
+            return;
+          }
           urlToHistoryItem[item.url!] = {
             id: item.id,
             url: item.url!,
@@ -39,9 +48,39 @@ const History: React.FC = () => {
           .slice(0, 10);
 
         setHistoryItems(sortedHistoryItems);
+        console.log("sortedHistoryItems", sortedHistoryItems);
+        getInterestFromNano(sortedHistoryItems);
       }
     );
   }, []);
+
+  const  getInterestFromNano = async (historyItems:HistoryItem[] ) => {
+
+    if (!window.ai || !window.ai.languageModel) {
+      console.log(`Your browser doesn't support the Prompt API. If you're on Chrome, join the <a href="https://developer.chrome.com/docs/ai/built-in#get_an_early_preview">Early Preview Program</a> to enable it.`)
+      return;
+    }
+
+    const session = await window.ai.languageModel.create({
+      temperature: Number(1),
+      topK: Number(3),
+    });
+    console.log("session", session); 
+
+
+    const formattedHistoryItem = historyItems.map(formatHistoryItem).join("\n");
+    const prompt = `I am interested in the following URLs: \n${formattedHistoryItem} \n
+     Please provide me with a topics of interest based on the URLs above in a comma separated list.`;
+
+    console.log("prompt", prompt);
+    const stream = await session.promptStreaming(prompt);
+
+    for await (const chunk of stream) {
+      const fullResponse = chunk.trim();
+      console.log("fullResponse", fullResponse);
+    }
+
+  }
 
   return (
     <div className="history-box">
