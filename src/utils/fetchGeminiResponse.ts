@@ -37,7 +37,6 @@ export const fetchGeminiResponse = async (
     }
 
     if (isChatbox) {
-      console.log("chatbox state on !!!!!!!!!!!!!!!!!!!!!!!!!");
       const sessionData = await new Promise<Message[]>((resolve) =>
         loadSessionData((sessionData) => {
           resolve(sessionData || []);
@@ -91,10 +90,22 @@ export const fetchGeminiResponse = async (
       signal: controller.signal,
     });
 
-    let responseText = "";
+    // let responseText = "";
 
+    // for await (const chunk of stream) {
+    //   responseText = chunk.trim();
+    // }
+    let responseText = "";
+    let previousChunk = "";
+
+    // Process stream to handle repetitive responses
     for await (const chunk of stream) {
-      responseText = chunk.trim();
+      const newChunk = chunk.startsWith(previousChunk)
+        ? chunk.slice(previousChunk.length)
+        : chunk;
+      console.log("chunk:", newChunk); // Log each new chunk
+      responseText += newChunk;
+      previousChunk = chunk;
     }
 
     return responseText;

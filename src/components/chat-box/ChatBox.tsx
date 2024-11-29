@@ -13,15 +13,28 @@ import {
   abortCurrentPrompt,
   resetSession,
 } from "../../utils/fetchGeminiResponse";
+import { PlaceholdersAndVanishInput } from "../ui/VanishInput";
+import { TextGenerateEffect } from "../ui/text-generate-effect";
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
+  const [latestAIMessageIndex, setLatestAIMessageIndex] = useState<
+    number | null
+  >(null);
+
   const {
     loading,
     messages: fetchedMessages,
     fetchResponse,
   } = useGeminiResponse();
+
+  const placeholders = [
+    "Type your interest...",
+    "Ask me anything!",
+    "What do you like?",
+    "Let's create a content!",
+  ];
 
   useEffect(() => {
     loadChatData(setMessages);
@@ -30,17 +43,12 @@ const ChatBox: React.FC = () => {
   useEffect(() => {
     if (fetchedMessages.length) {
       setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
+      setLatestAIMessageIndex(messages.length); // Track the latest AI message index
     }
   }, [fetchedMessages]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
-  };
-
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && !loading && input.trim()) {
-      sendMessage();
-    }
   };
 
   const sendMessage = () => {
@@ -55,28 +63,45 @@ const ChatBox: React.FC = () => {
     setInput("");
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendMessage();
+  };
+
   return (
     <div className="chatbox-container">
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            <MessageLine text={message.text} />
+            {message.sender === Sender.AI ? (
+              // Apply TextGenerateEffect only to the latest AI message
+              index === latestAIMessageIndex ? (
+                <TextGenerateEffect
+                  words={message.text || ""}
+                  duration={2}
+                  filter={false}
+                />
+              ) : (
+                // Render older AI messages with static MessageLine
+                <MessageLine text={message.text} />
+              )
+            ) : (
+              // Render user messages with MessageLine
+              <MessageLine text={message.text} />
+            )}
           </div>
         ))}
       </div>
+
       <div className="chat-input">
-        <input
-          type="text"
-          value={input}
+        <PlaceholdersAndVanishInput
+          loading={loading}
+          placeholders={placeholders}
           onChange={handleInputChange}
-          onKeyUp={handleKeyPress}
-          placeholder="Type your message..."
-          disabled={loading}
+          onSubmit={handleSubmit}
         />
-        <button onClick={sendMessage} disabled={loading || !input.trim()}>
-          {loading ? "Sending..." : "Send"}
-        </button>
       </div>
+
       <div
         style={{
           display: "flex",
@@ -89,9 +114,10 @@ const ChatBox: React.FC = () => {
           style={{
             display: "flex",
           }}
-          onClick={() =>
-            removeLocalStorageData("chatHistory", () => setMessages([]))
-          }
+          onClick={() => {
+            removeLocalStorageData("chatHistory", () => setMessages([]));
+            setLatestAIMessageIndex(null); // Clear latest AI message index
+          }}
         >
           Clear Chat History
         </button>
