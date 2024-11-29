@@ -43,7 +43,7 @@ const ChatBox: React.FC = () => {
   useEffect(() => {
     if (fetchedMessages.length) {
       setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
-      setLatestAIMessageIndex(messages.length); // Track the latest AI message index
+      setLatestAIMessageIndex(messages.length); 
     }
   }, [fetchedMessages]);
 
@@ -82,6 +82,7 @@ const ChatBox: React.FC = () => {
                   filter={false}
                 />
               ) : (
+                // TODO !!! correct style match with ai response with effect
                 // Render older AI messages with static MessageLine
                 <MessageLine text={message.text} />
               )
@@ -116,7 +117,7 @@ const ChatBox: React.FC = () => {
           }}
           onClick={() => {
             removeLocalStorageData("chatHistory", () => setMessages([]));
-            setLatestAIMessageIndex(null); // Clear latest AI message index
+            setLatestAIMessageIndex(null);
           }}
         >
           Clear Chat History

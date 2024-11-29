@@ -73,7 +73,6 @@ export const fetchGeminiResponse = async (
       );
     }
 
-    // Create session if not existing
     if (!session) {
       session = await window.ai.languageModel.create({
         temperature: 0.7,
@@ -81,7 +80,6 @@ export const fetchGeminiResponse = async (
       });
     }
 
-    // Clone the session for context preservation
     if (!clonedSession) {
       clonedSession = await session.clone({ signal: controller.signal });
     }

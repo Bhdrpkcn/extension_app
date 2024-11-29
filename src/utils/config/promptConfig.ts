@@ -24,7 +24,7 @@ export const promptConfig: Record<
   }
 > = {
   chatbox: {
-    promptTemplate: `You are a helpful assistant. User message: "{userMessage}". Limit response to 100 words.`,
+    promptTemplate: `Answer this message text that user wrote to you with helpful attitude. "{userMessage}". Generate short but concise messages Limit response to 100 words.`,
     continuedPromptTemplate: `Based on this data "{summaryData}" respond "{userMessage}". Limit response to 100 words.`,
     saveData: saveChatData,
   },
