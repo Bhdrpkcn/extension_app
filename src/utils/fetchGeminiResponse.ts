@@ -28,7 +28,6 @@ export const fetchGeminiResponse = async (
 
   let prompt: string;
   const isChatbox = component === "chatbox";
-  const isContent = component === "content";
 
   try {
     if (!window.ai || !window.ai.languageModel) {
@@ -67,13 +66,6 @@ export const fetchGeminiResponse = async (
           console.log("[fetchGeminiResponse] - Cleared chatSummary")
         );
       }
-    } else if (isContent) {
-      console.log("content state on !!!!!!!!!!!!!!!!!!!!!!!!!");
-      prompt = promptTemplate.replace("{userMessage}", userMessage);
-      console.log(
-        "[fetchGeminiResponse] - Using isContent component promptTemplate:",
-        prompt
-      );
     } else {
       prompt = promptTemplate.replace("{userMessage}", userMessage);
       console.log(
