@@ -33,7 +33,7 @@ export const promptConfig: Record<
     saveData: saveInterestData,
   },
   content: {
-    promptTemplate: `Generate a content about the user entered this web page a lot "{userMessage}" look at the title and definition for to create interesting and short content. Limit your response to 200 words.`,
+    promptTemplate: `Generate a content about the user entered this web page a lot "{userMessage}" look at the title and definition for to create interesting and short content. Limit your response to 50 words.`,
     saveData: saveContentData,
   },
   summarizeChat: {

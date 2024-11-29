@@ -1,1 +1,2 @@
-export type TabName = "ChatBox" | "Content" | "Interest";
+export type TabName = "ChatBox" | "Content";
+// export type TabName = "ChatBox" | "Content" | "Interest";

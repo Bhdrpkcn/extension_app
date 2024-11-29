@@ -45,35 +45,3 @@ export const fetchContentResponse = async (
     });
   }
 };
-
-// async function createSummarizerSession(
-//   config: { type: string; format: string; length: string },
-//   downloadProgressCallback: (
-//     message: string,
-//     progress: { loaded: number; total: number }
-//   ) => void
-// ) {
-//   if (!window.ai || !window.ai.summarizer) {
-//     throw new Error("AI Summarization is not supported in this browser.");
-//   }
-
-//   const canSummarize = await window.ai.summarizer.capabilities();
-//   if (canSummarize.available === "no") {
-//     throw new Error("AI Summarization is not supported");
-//   }
-
-//   const contentSession = await self.ai.summarizer.create(
-//     config,
-//     downloadProgressCallback
-//   );
-
-//   if (canSummarize.available === "after-download") {
-//     contentSession.addEventListener(
-//       "downloadprogress",
-//       downloadProgressCallback
-//     );
-//     await contentSession.ready;
-//   }
-
-//   return contentSession;
-// }

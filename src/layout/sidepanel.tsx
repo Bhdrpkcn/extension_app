@@ -7,7 +7,6 @@ import Body from "./Body";
 import Footer from "./Footer";
 import ChatBox from "../components/chat-box/ChatBox";
 import Content from "../components/content/Content";
-import Interest from "../components/interest/Interest";
 import { setActiveTab } from "../redux/slices/uiSlice";
 import { TabName } from "../types";
 import { RootState } from "../redux/rootReducer";
@@ -22,7 +21,7 @@ const Sidepanel = () => {
   const componentMap: Record<TabName, JSX.Element> = {
     ChatBox: <ChatBox />,
     Content: <Content />,
-    Interest: <Interest />,
+    // Interest: <Interest />,
   };
 
   const handleTabSelect = (tab: TabName) => {

@@ -89,7 +89,7 @@ export const saveContentData = (content: string[]) => {
   chrome.storage.local.set<StorageMap>({ contentData: content });
 };
 
-export const loadContentData = (callback: (content: string) => void) => {
+export const loadContentData = (callback: (content: string[]) => void) => {
   chrome.storage.local.get("contentData", (result) => {
     callback(result.contentData || "");
   });

@@ -10,7 +10,7 @@ const Header: React.FC<HeaderProps> = ({ onTabSelect }) => (
   <div className="header-container">
     <GradientButton name="Content" onTabSelect={onTabSelect} />
     <GradientButton name="ChatBox" onTabSelect={onTabSelect} />
-    <GradientButton name="Interest" onTabSelect={onTabSelect} />
+    {/* <GradientButton name="Interest" onTabSelect={onTabSelect} /> */}
   </div>
 );
 

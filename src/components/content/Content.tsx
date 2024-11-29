@@ -3,18 +3,21 @@ import "./style.scss";
 import { useContentResponse } from "@/hooks/useContentResponse";
 import { loadContentData } from "@/utils/dataUtils";
 import { Button } from "../ui/button";
+import { useFetchedHistory } from "@/hooks/useFetchedHistory";
 
 const Content: React.FC = () => {
   const {
     generatedContent,
-    setGeneratedContent, // We will use this to set the loaded content
+    setGeneratedContent,
     interestData,
     loading,
     showSyncButton,
     fetchGenerateContent,
   } = useContentResponse();
 
-  // Load content data on component mount and set it to `generatedContent`
+  const { loadingSummarization, handleSummarizeHistory, clearInterestData } =
+    useFetchedHistory();
+
   useEffect(() => {
     loadContentData((content: string[] | string) => {
       if (typeof content === "string") {
@@ -36,33 +39,47 @@ const Content: React.FC = () => {
 
   return (
     <div className="content-container">
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <div className="interest-data">
-        <h3>Interest Data</h3>
-        <p>
+      <div className="temporary-div">
+        <div className="temporary-text">
           {interestData
             ? "Interest data exists"
             : "No interest data available."}
-        </p>
-      </div>
+        </div>
+        <div className="temporary-buttons">
+          <div>
+            {showSyncButton ? (
+              <Button
+                onClick={fetchGenerateContent}
+                disabled={loading}
+                className="sync-button"
+              >
+                {loading ? "Syncing..." : "Sync Interest Data"}
+              </Button>
+            ) : (
+              <Button
+                onClick={fetchGenerateContent}
+                disabled={loading}
+                className="generate-content-button"
+              >
+                {loading ? "Generating..." : "refresh Content Tags"}
+              </Button>
+            )}
+          </div>
 
-      {showSyncButton ? (
-        <Button
-          onClick={fetchGenerateContent}
-          disabled={loading}
-          className="sync-button"
-        >
-          {loading ? "Syncing..." : "Sync Interest Data"}
-        </Button>
-      ) : (
-        <Button
-          onClick={fetchGenerateContent}
-          disabled={loading}
-          className="generate-content-button"
-        >
-          {loading ? "Generating..." : "refresh Content Tags"}
-        </Button>
-      )}
+          <div>
+            <button
+              className="sync-button"
+              onClick={handleSummarizeHistory}
+              disabled={loadingSummarization}
+            >
+              {loadingSummarization ? "Summarizing..." : "Summarize History"}
+            </button>
+            <button className="sync-button" onClick={clearInterestData}>
+              Clear Interest Data
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className="generated-content">
         <h3>Generated Content</h3>
