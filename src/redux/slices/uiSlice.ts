@@ -6,7 +6,7 @@ export interface UIState {
 }
 
 const initialState: UIState = {
-  activeTab: "ChatBox",
+  activeTab: "Content",
 };
 
 const uiSlice = createSlice({
