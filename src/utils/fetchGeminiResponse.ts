@@ -88,20 +88,14 @@ export const fetchGeminiResponse = async (
       signal: controller.signal,
     });
 
-    // let responseText = "";
-
-    // for await (const chunk of stream) {
-    //   responseText = chunk.trim();
-    // }
     let responseText = "";
     let previousChunk = "";
 
-    // Process stream to handle repetitive responses
     for await (const chunk of stream) {
       const newChunk = chunk.startsWith(previousChunk)
         ? chunk.slice(previousChunk.length)
         : chunk;
-      console.log("chunk:", newChunk); // Log each new chunk
+      console.log("chunk:", newChunk);
       responseText += newChunk;
       previousChunk = chunk;
     }

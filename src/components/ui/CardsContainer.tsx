@@ -1,33 +1,43 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { loadContentData } from "@/utils/dataUtils";
-import { useContentResponse } from "@/hooks/useContentResponse";
 import { cn } from "@/lib/utils";
 import { CardContainerHoverFx } from "./fx/cardContainerHoverFx";
+import { setIsContentChanged } from "@/redux/slices/uiSlice";
+import { RootState } from "@/redux/rootReducer";
 
 export function CardsContainer() {
-  const { generatedContent, setGeneratedContent } = useContentResponse();
+  const dispatch = useDispatch();
+  const isContentChanged = useSelector(
+    (state: RootState) => state.ui.isContentChanged
+  );
 
+  const [generatedContent, setGeneratedContent] = useState<string[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    loadContentData((content: string[] | string) => {
-      if (typeof content === "string") {
-        try {
-          const parsedContent = JSON.parse(content) as string[];
-          if (parsedContent.length > 0) {
-            setGeneratedContent(parsedContent);
-            console.log("Content data loaded:", parsedContent);
-          }
-        } catch (error) {
-          console.error("Error parsing content data:", error);
-        }
-      } else if (Array.isArray(content) && content.length > 0) {
+    loadContentData((content: string[]) => {
+      if (content.length > 0) {
         setGeneratedContent(content);
-        console.log("Content data loaded:", content);
+      } else {
+        console.warn("No initial content found.");
       }
     });
-  }, [setGeneratedContent]);
+  }, []);
+
+  useEffect(() => {
+    if (isContentChanged) {
+      loadContentData((content: string[]) => {
+        if (content.length > 0) {
+          setGeneratedContent(content);
+        } else {
+          console.warn("No content available to update.");
+        }
+      });
+      dispatch(setIsContentChanged(false));
+    }
+  }, [isContentChanged, dispatch]);
 
   return (
     <div className="max-w-5xl mx-auto px-8">
