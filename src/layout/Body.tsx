@@ -1,6 +1,5 @@
-"use client";
-
 import React from "react";
+
 import { Tabs } from "../components/ui/Tabs";
 import { TabName } from "../types";
 import "../styles/style.scss";

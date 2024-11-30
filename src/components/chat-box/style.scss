@@ -5,11 +5,12 @@
 
   width: 99%;
   height: 97%;
-  background-color: #a0a0a0;
+  background-color: #202020;
   border: none;
   border-radius: 1rem;
 
   .chat-messages {
+    z-index: 20;
     overflow-y: auto;
     width: 90%;
     height: 100%;
@@ -60,7 +61,7 @@
         .message-paragraph,
         .message-title,
         .message-list-item {
-          color: #333333;
+          color: #a9a9a9;
           padding: 8px 12px;
           border-radius: 12px;
           display: inline-block;

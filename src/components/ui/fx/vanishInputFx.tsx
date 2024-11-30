@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-
-import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
 import { cn } from "@/lib/utils";
 
-export function PlaceholdersAndVanishInput({
+export function VanishInputFx({
   placeholders,
   onChange,
   onSubmit,

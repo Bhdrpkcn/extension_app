@@ -114,13 +114,14 @@ html {
     background-color: vars.$secondary-background-color;
     border-top: 0.5px solid gray;
 
-    .footer-text {
+    .footer-animation {
       display: flex;
       overflow: auto;
+      justify-content: center;
+      width: 99%;
       max-height: 80%;
       font-size: 12px;
       margin-left: vars.$side-margin;
-      border-right: 1px solid gray;
     }
     .footer-buttons {
       display: flex;
