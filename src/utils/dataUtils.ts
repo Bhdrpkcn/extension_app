@@ -66,7 +66,7 @@ export const loadHistoryData = (
   callback: (historyItems: HistoryItem[]) => void
 ): void => {
   chrome.storage.local.get("historyData", (result) => {
-    const historyItems = result.historyData || [];
+    const historyItems: HistoryItem[] = result.historyData || [];
     callback(historyItems);
   });
 };

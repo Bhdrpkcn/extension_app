@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import { fetchHistoryItems } from "../utils/fetchHistoryItems";
-import { processSummarizedHistory } from "../utils/fetchGeminiSummarize";
-import { loadInterestData, removeLocalStorageData } from "../utils/dataUtils";
+import { createInterestData } from "../utils/fetchGeminiSummarize";
+import { removeLocalStorageData, saveInterestData } from "../utils/dataUtils";
 import { HistoryItem } from "../types/historyItemType";
 import { handleError } from "../utils/error/errorHandler";
 
 export const useFetchedHistory = () => {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
-  const [summaries, setSummaries] = useState<{ [key: string]: string } | null>(
-    null
-  );
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [loadingSummarization, setLoadingSummarization] = useState(false);
 
@@ -30,22 +27,11 @@ export const useFetchedHistory = () => {
     }
   };
 
-  const handleSummarizeHistory = async () => {
+
+  const createAndSaveInterestData = async () => {
     setLoadingSummarization(true);
     try {
-      await processSummarizedHistory();
-
-      loadInterestData((data) => {
-        if (data) {
-          const transformedSummaries = data.reduce((acc, item, index) => {
-            acc[`Item ${index + 1}`] = item;
-            return acc;
-          }, {} as { [key: string]: string });
-          setSummaries(transformedSummaries);
-        } else {
-          setSummaries(null);
-        }
-      });
+       await createInterestData();
     } catch (error) {
       handleError(error, {
         logToConsole: true,
@@ -56,20 +42,32 @@ export const useFetchedHistory = () => {
   };
 
   const clearInterestData = () => {
-    removeLocalStorageData("interestData", () => setSummaries(null));
+    removeLocalStorageData("interestData",() => {})
   };
 
   useEffect(() => {
     fetchAndSaveHistory();
   }, []);
 
+  useEffect(()=> {
+    if(historyItems.length){
+      createAndSaveInterestData()
+    }
+  },[historyItems])
+
   return {
-    historyItems,
-    summaries,
     loadingHistory,
     loadingSummarization,
-    fetchAndSaveHistory,
-    handleSummarizeHistory,
+    createAndSaveInterestData,
     clearInterestData,
   };
+
 };
+
+
+
+// const interestDataMapped = (interestData as string[]).reduce((acc, item, index) => {
+//   acc[`Item ${index + 1}`] = item;
+//   return acc;
+// }, {} as { [key: string]: string });
+// setMappedInterestData(interestDataMapped);

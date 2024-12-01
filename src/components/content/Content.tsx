@@ -9,7 +9,7 @@ import "./style.scss";
 const Content: React.FC = () => {
   const { interestData, loading, fetchGenerateContent } = useContentResponse();
 
-  const { loadingSummarization, handleSummarizeHistory, clearInterestData } =
+  const { loadingSummarization, createAndSaveInterestData, clearInterestData } =
     useFetchedHistory();
 
   return (
@@ -34,7 +34,7 @@ const Content: React.FC = () => {
           <div className="temporary-dev-buttons">
             <button
               className="sync-button"
-              onClick={handleSummarizeHistory}
+              onClick={createAndSaveInterestData}
               disabled={loadingSummarization}
             >
               {loadingSummarization ? "Summarizing..." : "Summarize History"}
