@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 
 import {
   loadContentData,
-  loadInterestData,
   saveContentData,
 } from "../utils/dataUtils";
 import { fetchContentResponse } from "../utils/fetchContentResponse";
@@ -12,13 +11,10 @@ import { setIsContentChanged } from "@/redux/slices/uiSlice";
 
 export const useContentResponse = () => {
   const dispatch = useDispatch();
-  const [interestData, setInterestData] = useState<string[] | null>(null);
   const [generatedContent, setGeneratedContent] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadInterestData(setInterestData);
-  }, []);
+
 
   useEffect(() => {
     loadContentData((content: string[]) => {
@@ -30,7 +26,7 @@ export const useContentResponse = () => {
     });
   }, []);
 
-  const fetchGenerateContent = async () => {
+  const fetchGenerateContent = async (interestData: string[]) => {
     if (!interestData) {
       console.log("No interest data available.");
       return;
@@ -59,7 +55,6 @@ export const useContentResponse = () => {
   };
 
   return {
-    interestData,
     generatedContent,
     loading,
     fetchGenerateContent,

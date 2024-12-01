@@ -1,4 +1,4 @@
-import { loadHistoryData, saveInterestData } from "./dataUtils";
+import { saveInterestData } from "./dataUtils";
 import { promptConfig } from "../utils/config/promptConfig";
 import { handleError } from "./error/errorHandler";
 import { HistoryItem } from "@/types/historyItemType";
@@ -27,7 +27,7 @@ export const summarizeText = async (text: string): Promise<string> => {
   }
 };
 
-export const createInterestData = async () => {
+export const createInterestData = async (historyItems: HistoryItem[]) => {
 
   const handleHistoryData = async (historyItems: HistoryItem[]) => {
     if (!historyItems.length) {
@@ -78,14 +78,9 @@ export const createInterestData = async () => {
   }
 
   return new Promise((resolve, reject) => {
-    try {
-      loadHistoryData(async (historyItems) => {
-        const result = await handleHistoryData(historyItems);
-        resolve(result);
-      });
-    } catch (error) {
-      reject(error);
-    }
+    handleHistoryData(historyItems)
+      .then((result) => resolve(result))
+      .catch((error) => reject(error));
   });
 };
 

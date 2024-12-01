@@ -1,43 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { fetchHistoryItems } from "../utils/fetchHistoryItems";
 import { createInterestData } from "../utils/fetchGeminiSummarize";
-import { removeLocalStorageData, saveInterestData } from "../utils/dataUtils";
-import { HistoryItem } from "../types/historyItemType";
+import { removeLocalStorageData } from "../utils/dataUtils";
 import { handleError } from "../utils/error/errorHandler";
+import { useContentResponse } from "./useContentResponse";
 
 export const useFetchedHistory = () => {
-  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
-  const [loadingHistory, setLoadingHistory] = useState(false);
-  const [loadingSummarization, setLoadingSummarization] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { fetchGenerateContent } = useContentResponse();
 
-  const fetchAndSaveHistory = async () => {
-    setLoadingHistory(true);
+
+  const syncAndGenerateContent = async () => {
+    setLoading(true);
     try {
-      await fetchHistoryItems();
-      chrome.storage.local.get("historyData", (result) => {
-        setHistoryItems(result.historyData || []);
-      });
-    } catch (error) {
-      handleError(error, {
-        logToConsole: true,
-        fallbackValue: [],
-      });
-    } finally {
-      setLoadingHistory(false);
-    }
-  };
-
-
-  const createAndSaveInterestData = async () => {
-    setLoadingSummarization(true);
-    try {
-       await createInterestData();
+       const historyItems  = await fetchHistoryItems();
+       const interestData = await createInterestData(historyItems);
+       await fetchGenerateContent(interestData as string[])
     } catch (error) {
       handleError(error, {
         logToConsole: true,
       });
     } finally {
-      setLoadingSummarization(false);
+      setLoading(false);
     }
   };
 
@@ -45,20 +29,10 @@ export const useFetchedHistory = () => {
     removeLocalStorageData("interestData",() => {})
   };
 
-  useEffect(() => {
-    fetchAndSaveHistory();
-  }, []);
-
-  useEffect(()=> {
-    if(historyItems.length){
-      createAndSaveInterestData()
-    }
-  },[historyItems])
 
   return {
-    loadingHistory,
-    loadingSummarization,
-    createAndSaveInterestData,
+    loading,
+    syncAndGenerateContent,
     clearInterestData,
   };
 
