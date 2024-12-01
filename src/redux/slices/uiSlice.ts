@@ -6,7 +6,7 @@ export interface UIState {
 }
 
 const initialState: UIState = {
-  activeTab: "Content",
+  activeTab: "ChatBox",
 };
 
 const uiSlice = createSlice({
@@ -14,6 +14,9 @@ const uiSlice = createSlice({
   initialState,
   reducers: {
     setActiveTab(state, action: PayloadAction<TabName>) {
+      console.log(
+        `[Redux] Tab changing from ${state.activeTab} to ${action.payload}`
+      );
       state.activeTab = action.payload;
     },
   },
