@@ -3,10 +3,12 @@ import { TabName } from "../../types";
 
 export interface UIState {
   activeTab: TabName;
+  isContentChanged: boolean;
 }
 
 const initialState: UIState = {
   activeTab: "ChatBox",
+  isContentChanged: false,
 };
 
 const uiSlice = createSlice({
@@ -19,8 +21,12 @@ const uiSlice = createSlice({
       );
       state.activeTab = action.payload;
     },
+    setIsContentChanged(state, action: PayloadAction<boolean>) {
+      console.log("[Redux] Content change flag set to:", action.payload);
+      state.isContentChanged = action.payload;
+    },
   },
 });
 
-export const { setActiveTab } = uiSlice.actions;
+export const { setActiveTab, setIsContentChanged } = uiSlice.actions;
 export default uiSlice.reducer;

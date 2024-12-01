@@ -1,10 +1,10 @@
 /* eslint-disable prefer-const */
-"use client";
 import { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
+
 import { cn } from "@/lib/utils";
 
-export const TextGenerateEffect = ({
+export const TextGenerateEffectFx = ({
   words,
   className,
   filter = true,
@@ -38,7 +38,7 @@ export const TextGenerateEffect = ({
           return (
             <motion.span
               key={word + idx}
-              className="dark:text-white text-black opacity-0"
+              className="text-white opacity-0"
               style={{
                 filter: filter ? "blur(10px)" : "none",
               }}
@@ -52,7 +52,7 @@ export const TextGenerateEffect = ({
   };
 
   return (
-    <div className={cn("font-bold", className)}>
+    <div className={cn(className)}>
       <div className="mt-4">
         <div className="leading-snug tracking-wide">{renderWords()}</div>
       </div>

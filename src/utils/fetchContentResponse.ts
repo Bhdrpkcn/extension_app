@@ -13,6 +13,10 @@ export const fetchContentResponse = async (
   const prompt = promptTemplate.replace("{userMessage}", userMessage);
 
   try {
+    console.log(
+      "[fetchContentResponse] >>>>>>>>>>>>>>< Content creation started"
+    );
+
     if (!window.ai || !window.ai.languageModel) {
       return handleError("Gemini Nano is not available in this browser.", {
         fallbackValue: "Error: AI service unavailable.",
@@ -34,8 +38,10 @@ export const fetchContentResponse = async (
       responseText = chunk.trim();
     }
 
-    console.log("[fetchContentResponse] Prompt:", prompt);
-    console.log("Response from CONTENTRESPONSE:", responseText);
+    console.log("[fetchContentResponse] PROMPT >>>>>>>>>>>>:", prompt);
+    console.log("[fetchContentResponse] RESPONSE >>>>>>>>>>:", responseText);
+
+    session = null;
 
     return responseText;
   } catch (error) {

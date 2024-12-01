@@ -3,16 +3,18 @@
   flex-direction: column;
   align-items: center;
 
-  width: 99%;
+  width: 97%;
   height: 97%;
-  background-color: #a0a0a0;
+  background: linear-gradient(20deg, #4f4f4f, #0f0f0f);
   border: none;
   border-radius: 1rem;
 
   .chat-messages {
+    z-index: 20;
     overflow-y: auto;
     width: 90%;
     height: 100%;
+    margin-top: 1.5em;
     display: flex;
     flex-direction: column;
 
@@ -47,7 +49,7 @@
         .message-title,
         .message-list-item {
           color: #ffffff;
-          background-color: #007aaa;
+          background: linear-gradient(30deg, #a58dd3, #5ca7a6);
           padding: 8px 12px;
           border-radius: 12px;
           display: inline-block;
@@ -60,7 +62,7 @@
         .message-paragraph,
         .message-title,
         .message-list-item {
-          color: #333333;
+          color: #a9a9a9;
           padding: 8px 12px;
           border-radius: 12px;
           display: inline-block;

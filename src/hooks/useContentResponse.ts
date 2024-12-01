@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
 import {
   loadContentData,
   loadInterestData,
@@ -6,11 +8,12 @@ import {
 } from "../utils/dataUtils";
 import { fetchContentResponse } from "../utils/fetchContentResponse";
 import { handleError } from "../utils/error/errorHandler";
+import { setIsContentChanged } from "@/redux/slices/uiSlice";
 
 export const useContentResponse = () => {
+  const dispatch = useDispatch();
   const [interestData, setInterestData] = useState<string[] | null>(null);
   const [generatedContent, setGeneratedContent] = useState<string[]>([]);
-  const [showSyncButton, setShowSyncButton] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -18,11 +21,11 @@ export const useContentResponse = () => {
   }, []);
 
   useEffect(() => {
-    loadContentData((content: string[] | string) => {
-      if (content.length === 0) {
-        setShowSyncButton(true);
+    loadContentData((content: string[]) => {
+      if (content.length > 0) {
+        setGeneratedContent(content);
       } else {
-        setShowSyncButton(false);
+        console.warn("Content data is empty.");
       }
     });
   }, []);
@@ -34,20 +37,20 @@ export const useContentResponse = () => {
     }
 
     setLoading(true);
-    try {
-      const responses = await Promise.all(
-        interestData.map((tag) => fetchContentResponse(tag, "content"))
-      );
-      setGeneratedContent(responses);
+    const contentArray: string[] = [];
 
-      const contentArray: string[] = [];
-      responses.forEach((content) => {
-        contentArray.push(content);
-        console.log("content ITEM FROM ARRAY", content);
-      });
+    try {
+      for (const tag of interestData) {
+        const response = await fetchContentResponse(tag, "content");
+        contentArray.push(response);
+      }
 
       saveContentData(contentArray);
-      console.log("content ARRAY :", contentArray);
+      console.log(">>>>>>>>>>FINAL Contents_ARRAY :", contentArray);
+
+      setGeneratedContent(contentArray);
+
+      dispatch(setIsContentChanged(true));
     } catch (error) {
       handleError(error, { logToConsole: true });
     } finally {
@@ -59,7 +62,6 @@ export const useContentResponse = () => {
     interestData,
     generatedContent,
     loading,
-    showSyncButton,
     fetchGenerateContent,
     setGeneratedContent,
   };

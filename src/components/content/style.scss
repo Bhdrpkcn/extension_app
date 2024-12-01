@@ -4,9 +4,9 @@
   justify-content: space-around;
   align-items: center;
 
-  width: 99%;
+  width: 97%;
   height: 97%;
-  background-color: #808080;
+  background: linear-gradient(20deg, #0f0f0f, #3f3f3f);
 
   border: none;
   border-radius: 1rem;
@@ -25,13 +25,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    width: 99%;
 
     .temporary-buttons {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+    }
+    .temporary-dev-buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      width: 90%;
+      min-width: 250px;
+      color: #fff;
+      border-bottom: 0.5px solid lightblue;
     }
     .temporary-text {
       display: flex;

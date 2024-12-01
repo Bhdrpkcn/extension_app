@@ -13,8 +13,9 @@ import {
   abortCurrentPrompt,
   resetSession,
 } from "../../utils/fetchGeminiResponse";
-import { PlaceholdersAndVanishInput } from "../ui/VanishInput";
-import { TextGenerateEffect } from "../ui/text-generate-effect";
+import { TextGenerateEffectFx } from "../ui/fx/textGenerateEffectFx";
+import { VanishInputFx } from "../ui/fx/vanishInputFx";
+import { BackgroundBeamsFx } from "../ui/fx/backgroundBeamsFx";
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -43,7 +44,7 @@ const ChatBox: React.FC = () => {
   useEffect(() => {
     if (fetchedMessages.length) {
       setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
-      setLatestAIMessageIndex(messages.length); 
+      setLatestAIMessageIndex(messages.length);
     }
   }, [fetchedMessages]);
 
@@ -76,7 +77,7 @@ const ChatBox: React.FC = () => {
             {message.sender === Sender.AI ? (
               // Apply TextGenerateEffect only to the latest AI message
               index === latestAIMessageIndex ? (
-                <TextGenerateEffect
+                <TextGenerateEffectFx
                   words={message.text || ""}
                   duration={2}
                   filter={false}
@@ -95,7 +96,7 @@ const ChatBox: React.FC = () => {
       </div>
 
       <div className="chat-input">
-        <PlaceholdersAndVanishInput
+        <VanishInputFx
           loading={loading}
           placeholders={placeholders}
           onChange={handleInputChange}
@@ -106,14 +107,18 @@ const ChatBox: React.FC = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
+          flexDirection: "row",
+          width: "100%",
+          justifyContent: "space-around",
+          alignContent: "space-around",
+          fontSize: "8px",
+          zIndex: "20",
           height: "40px",
         }}
       >
         <button
           style={{
-            display: "flex",
+            color: "white",
           }}
           onClick={() => {
             removeLocalStorageData("chatHistory", () => setMessages([]));
@@ -122,9 +127,25 @@ const ChatBox: React.FC = () => {
         >
           Clear Chat History
         </button>
-        <button onClick={abortCurrentPrompt}>Stop Running Prompt</button>
-        <button onClick={resetSession}>Reset AI Session</button>
+        <button
+          style={{
+            color: "white",
+          }}
+          onClick={abortCurrentPrompt}
+        >
+          Stop Running Prompt
+        </button>
+        <button
+          style={{
+            color: "white",
+          }}
+          onClick={resetSession}
+        >
+          Reset AI Session
+        </button>
       </div>
+
+      <BackgroundBeamsFx />
     </div>
   );
 };
