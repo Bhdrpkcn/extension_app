@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -14,18 +14,20 @@ type Tab = {
   content?: string | React.ReactNode;
 };
 
-export const Tabs = ({
-  tabs,
-  containerClassName,
-  activeTabClassName,
-  tabClassName,
-  contentClassName,
-}: {
+type TabsProps = {
   tabs: Tab[];
   containerClassName?: string;
   activeTabClassName?: string;
   tabClassName?: string;
   contentClassName?: string;
+}
+
+export const Tabs: FC<TabsProps> = ({
+  tabs,
+  containerClassName,
+  activeTabClassName,
+  tabClassName,
+  contentClassName,
 }) => {
   const dispatch = useDispatch();
   const activeTab = useSelector((state: RootState) => state.ui.activeTab);
